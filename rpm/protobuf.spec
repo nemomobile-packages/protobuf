@@ -104,8 +104,11 @@ chmod 644 examples/*
 iconv -f iso8859-1 -t utf-8 CONTRIBUTORS.txt > CONTRIBUTORS.txt.utf8
 mv CONTRIBUTORS.txt.utf8 CONTRIBUTORS.txt
 export PTHREAD_LIBS="-lpthread"
+export CXXFLAGS="$CXXFLAGS -fPIC -DPIC"
 ./autogen.sh
-%configure
+%configure \
+    --enable-shared \
+    --enable-static
 
 make %{?_smp_mflags}
 
