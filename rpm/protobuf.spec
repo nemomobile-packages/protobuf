@@ -1,13 +1,11 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
-Version:        2.5.0
-Release:        5%{?dist}
+Version:        2.6.1
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Libraries
-Source:         http://protobuf.googlecode.com/files/protobuf-%{version}.tar.bz2
+Source:         https://github.com/google/protobuf/releases/download/%{version}/protobuf-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
-Patch3:         0001-Add-generic-GCC-support-for-atomic-operations.patch
-Patch4:         protobuf-2.5.0-makefile.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
 
@@ -102,15 +100,15 @@ descriptions in Vim editor
 %setup -q -n %{name}-%{version}/%{name}
 chmod 644 examples/*
 
-%patch3 -p1 -b .generic-atomics
-%patch4 -p1 -b .generic-atomics-makefile
-
 %build
 iconv -f iso8859-1 -t utf-8 CONTRIBUTORS.txt > CONTRIBUTORS.txt.utf8
 mv CONTRIBUTORS.txt.utf8 CONTRIBUTORS.txt
 export PTHREAD_LIBS="-lpthread"
+export CXXFLAGS="$CXXFLAGS -fPIC -DPIC"
 ./autogen.sh
-%configure
+%configure \
+    --enable-shared \
+    --enable-static
 
 make %{?_smp_mflags}
 
